@@ -1,0 +1,11 @@
+name: IceRush
+version: '${version}'
+main: run.tere.plugin.icerush.IceRush
+api-version: 1.17
+authors: [ tererun ]
+description: IceRush
+depend:
+  - ProtocolLib
+commands:
+  icerush:
+    description: icerush
