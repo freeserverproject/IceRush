@@ -1,5 +1,6 @@
 package run.tere.plugin.icerush.commands;
 
+import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -23,10 +24,14 @@ public class IceRushCommand implements CommandExecutor {
         }
         if (args.length == 0) {
             sender.sendMessage("§f======== [§bIceRush§f] ========");
-            sender.sendMessage("§a/icerush§f: このヘルプを表示");
-            sender.sendMessage("§a/icerush start§f: ゲームを開始");
+            sender.sendMessage("§a/icerush§f: このヘルプを表示する");
+            sender.sendMessage("§a/icerush start§f: ゲームを開始する");
             sender.sendMessage("§a/icerush get <dash/jump/itemblock/checkpoint>§f: 各種アイテムを取得する");
             sender.sendMessage("§a/icerush addkart§f: カートを追加する");
+            sender.sendMessage("§a/icerush course add§f: 現在のワールドをコースとして追加する");
+            sender.sendMessage("§a/icerush course remove§f: 現在のワールドをコースから削除する");
+            sender.sendMessage("§a/icerush course lap [value]§f: 現在のワールドの周回回数を変更する");
+            sender.sendMessage("§a/icerush course list§f: コースのリストを表示する");
         } else {
             switch (args[0]) {
                 case "start":
@@ -74,6 +79,23 @@ public class IceRushCommand implements CommandExecutor {
                         IceRush.getPlugin().getGameHandler().getIceRushKartHandler().getIceRushKarts().add(new IceRushKart(vehicle.getUniqueId()));
                         ChatUtil.sendMessage(sender, "§aカートを追加しました!");
                         break;
+                        case "course":
+                            if (args.length == 1) {
+                                ChatUtil.sendMessage(sender, "§cコマンドが不正です!");
+                                return false;
+                            }
+                            if (!(sender instanceof Player player)) {
+                                ChatUtil.sendMessage(sender, "§cプレイヤーのみ実行できます!");
+                                return false;
+                            }
+                            World world = player.getWorld();
+                            switch (args[1]) {
+                                case "add":
+                                    if (IceRush.getPlugin().getGameHandler().getCourseHandler().getCourse(world) != null) {
+
+                                    }
+
+                            }
                 default:
                     ChatUtil.sendMessage(sender, "§cそのコマンドは存在しません!");
                     return false;

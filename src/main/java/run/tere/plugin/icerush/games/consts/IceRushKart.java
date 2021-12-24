@@ -1,17 +1,19 @@
 package run.tere.plugin.icerush.games.consts;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public class IceRushKart {
 
     private UUID kartUUID;
     private int nowCheckpoint;
-    private int prevCheckpoint;
+    private List<Integer> throughCheckpoints;
 
     public IceRushKart(UUID kartUUID) {
         this.kartUUID = kartUUID;
         this.nowCheckpoint = 0;
-        this.prevCheckpoint = 0;
+        this.throughCheckpoints = new ArrayList<>();
     }
 
     public UUID getKartUUID() {
@@ -22,16 +24,12 @@ public class IceRushKart {
         return nowCheckpoint;
     }
 
-    public int getPrevCheckpoint() {
-        return prevCheckpoint;
+    public List<Integer> getThroughCheckpoints() {
+        return throughCheckpoints;
     }
 
     public void setNowCheckpoint(int nowCheckpoint) {
         this.nowCheckpoint = nowCheckpoint;
-    }
-
-    public void setPrevCheckpoint(int prevCheckpoint) {
-        this.prevCheckpoint = prevCheckpoint;
     }
 
 }

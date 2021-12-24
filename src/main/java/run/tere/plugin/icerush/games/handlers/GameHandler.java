@@ -6,10 +6,12 @@ public class GameHandler {
 
     private GameStatus gameStatus;
     private IceRushKartHandler iceRushKartHandler;
+    private CourseHandler courseHandler;
 
     public GameHandler() {
         this.gameStatus = GameStatus.PREPARING;
         this.iceRushKartHandler = new IceRushKartHandler();
+        this.courseHandler = new CourseHandler();
     }
 
     public GameStatus getGameStatus() {
@@ -18,6 +20,10 @@ public class GameHandler {
 
     public IceRushKartHandler getIceRushKartHandler() {
         return iceRushKartHandler;
+    }
+
+    public CourseHandler getCourseHandler() {
+        return courseHandler;
     }
 
 }

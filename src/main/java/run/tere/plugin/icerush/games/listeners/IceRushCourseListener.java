@@ -20,6 +20,8 @@ import run.tere.plugin.icerush.games.handlers.IceRushKartHandler;
 import run.tere.plugin.icerush.utils.CourseUtil;
 import run.tere.plugin.icerush.utils.ObjectUtil;
 
+import java.util.List;
+
 public class IceRushCourseListener implements Listener {
 
     @EventHandler
@@ -55,15 +57,20 @@ public class IceRushCourseListener implements Listener {
                 player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(iceRushKart.getNowCheckpoint() + ", " + CourseUtil.getCheckpointSize(vehicle.getWorld())));
             }
         }
-        if (next < iceRushKart.getNowCheckpoint() || next > iceRushKart.getNowCheckpoint() + 3) {
+        List<Integer> throughCheckpoints = iceRushKart.getThroughCheckpoints();
+        if (next < iceRushKart.getNowCheckpoint() ||
+                (next > iceRushKart.getNowCheckpoint() + 3 && (!throughCheckpoints.isEmpty() && throughCheckpoints.get(throughCheckpoints.size() - 1) >= next)) ||
+                (next > iceRushKart.getNowCheckpoint() + 3 && throughCheckpoints.isEmpty()))
+        {
             for (Entity entity : vehicle.getPassengers()) {
                 if (entity instanceof Player player) {
                     player.sendTitle(next + ", " + iceRushKart.getNowCheckpoint(), "§c逆走しています!", 0, 10, 0);
-                    player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_BIT, 1F, 0.5F);
+                    player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_BELL, 1F, 2F);
                 }
             }
         } else {
             iceRushKart.setNowCheckpoint(next);
+            iceRushKart.getThroughCheckpoints().add(next);
             if (iceRushKart.getNowCheckpoint() >= CourseUtil.getCheckpointSize(vehicle.getWorld()) - 1) {
                 if (toLocation.clone().add(0, -2, 0).getBlock().getType() == Material.DRIED_KELP_BLOCK &&
                 toLocation.clone().add(0, -3, 0).getBlock().getType() == Material.BROWN_GLAZED_TERRACOTTA) {

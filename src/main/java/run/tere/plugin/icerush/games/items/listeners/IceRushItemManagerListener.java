@@ -20,7 +20,8 @@ import run.tere.plugin.icerush.utils.LocationUtil;
 import run.tere.plugin.icerush.utils.ObjectUtil;
 import run.tere.plugin.icerush.utils.PlayerUtil;
 
-public class IceRushItemManagerListener implements Listener {
+public class
+IceRushItemManagerListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onBlockPlace(BlockPlaceEvent e) {
