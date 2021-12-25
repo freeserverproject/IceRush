@@ -6,11 +6,15 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.craftbukkit.v1_17_R1.entity.CraftArmorStand;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.Player;
 import org.bukkit.entity.Vehicle;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.vehicle.VehicleExitEvent;
 import org.bukkit.event.vehicle.VehicleMoveEvent;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -109,8 +113,20 @@ public class IceRushMainGameListener implements Listener {
     }
 
     @EventHandler
+    public void onPlayerDropItem(PlayerDropItemEvent e) {
+        Player player = e.getPlayer();
+        ItemStack itemStack = e.getItemDrop().getItemStack();
+
+    }
+
+    @EventHandler
     public void onVehicleExit(VehicleExitEvent e) {
         if (IceRush.getPlugin().getGameHandler().getGameStatus().equals(GameStatus.PLAYING)) e.setCancelled(true);
+    }
+
+    @EventHandler
+    public void onEntityDamageEvent(EntityDamageEvent e) {
+        if (!e.getCause().equals(EntityDamageEvent.DamageCause.VOID)) e.setCancelled(true);
     }
 
     /*

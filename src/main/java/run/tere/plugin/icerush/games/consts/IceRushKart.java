@@ -9,11 +9,13 @@ public class IceRushKart {
     private UUID kartUUID;
     private int nowCheckpoint;
     private List<Integer> throughCheckpoints;
+    private int nowLap;
 
     public IceRushKart(UUID kartUUID) {
         this.kartUUID = kartUUID;
         this.nowCheckpoint = 0;
         this.throughCheckpoints = new ArrayList<>();
+        this.nowLap = 0;
     }
 
     public UUID getKartUUID() {
@@ -30,6 +32,18 @@ public class IceRushKart {
 
     public void setNowCheckpoint(int nowCheckpoint) {
         this.nowCheckpoint = nowCheckpoint;
+    }
+
+    public int getNowLap() {
+        return nowLap;
+    }
+
+    public void setNowLap(int lap) {
+        this.nowLap = lap;
+    }
+
+    public void addNowLap(int lap) {
+        setNowLap(getNowLap() + lap);
     }
 
 }

@@ -1,6 +1,7 @@
 package run.tere.plugin.icerush.games.handlers;
 
 import run.tere.plugin.icerush.games.consts.Course;
+import run.tere.plugin.icerush.utils.JsonUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +39,7 @@ public class CourseHandler {
     }
 
     public void save() {
-
+        JsonUtil.saveCourseHandler(this);
     }
 
 }

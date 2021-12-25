@@ -16,6 +16,8 @@ import run.tere.plugin.icerush.games.items.listeners.IceRushItemManagerListener;
 import run.tere.plugin.icerush.games.listeners.IceRushCourseListener;
 import run.tere.plugin.icerush.games.listeners.IceRushMainGameListener;
 
+import java.io.File;
+
 public final class IceRush extends JavaPlugin {
 
     private static IceRush plugin;
@@ -25,8 +27,13 @@ public final class IceRush extends JavaPlugin {
     @Override
     public void onEnable() {
         plugin = this;
+        saveDefaultConfig();
         this.protocolManager = ProtocolLibrary.getProtocolManager();
         this.gameHandler = new GameHandler();
+        File soundFolder = new File(getDataFolder() + File.separator + "sounds");
+        if (!soundFolder.exists()) {
+            soundFolder.mkdirs();
+        }
         getServer().getPluginManager().registerEvents(new IceRushMainGameListener(), this);
         getServer().getPluginManager().registerEvents(new IceRushCourseListener(), this);
         getServer().getPluginManager().registerEvents(new IceRushItemManagerListener(), this);

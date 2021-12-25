@@ -2,9 +2,7 @@ package run.tere.plugin.icerush.games.handlers;
 
 import run.tere.plugin.icerush.games.consts.IceRushKart;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public class IceRushKartHandler {
 
@@ -25,6 +23,14 @@ public class IceRushKartHandler {
             }
         }
         return null;
+    }
+
+    public IceRushKart getRandomIceRushKart(IceRushKart ignoreIceRushKart) {
+        List<IceRushKart> iceRushKarts = new ArrayList<>(this.iceRushKarts);
+        iceRushKarts.remove(ignoreIceRushKart);
+        if (iceRushKarts.isEmpty()) return null;
+        Collections.shuffle(iceRushKarts);
+        return iceRushKarts.get(0);
     }
 
 }

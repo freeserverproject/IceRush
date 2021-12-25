@@ -14,6 +14,7 @@ import run.tere.plugin.icerush.IceRush;
 import run.tere.plugin.icerush.consts.JsonLocation;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class ObjectUtil {
@@ -155,6 +156,17 @@ public class ObjectUtil {
         itemMeta.setDisplayName("§a§lチェックポイント");
         itemMeta.getPersistentDataContainer().set(objectKey, PersistentDataType.STRING, "Checkpoint");
         itemMeta.setCustomModelData(4);
+        itemStack.setItemMeta(itemMeta);
+        return itemStack;
+    }
+
+    public static ItemStack getReturnCheckpoint() {
+        ItemStack itemStack = new ItemStack(Material.BLAZE_ROD, 1);
+        ItemMeta itemMeta = itemStack.getItemMeta();
+        itemMeta.setDisplayName("§c§lチェックポイントまで戻る");
+        itemMeta.setLore(new ArrayList<>(Arrays.asList("§e3秒間§f掛けて近くのチェックポイントまで戻る", "§c§l詰んだ時に§fお使いください")));
+        itemMeta.getPersistentDataContainer().set(objectKey, PersistentDataType.STRING, "ReturnCheckpoint");
+        itemMeta.setCustomModelData(1);
         itemStack.setItemMeta(itemMeta);
         return itemStack;
     }

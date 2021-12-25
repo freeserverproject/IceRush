@@ -1,9 +1,11 @@
 package run.tere.plugin.icerush.utils;
 
 import org.bukkit.block.BlockFace;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
 public class PlayerUtil {
+
     public static BlockFace getDirection(Player player) {
         float yaw = player.getLocation().getYaw();
         if (yaw < 0) {
@@ -24,4 +26,14 @@ public class PlayerUtil {
         }
         return BlockFace.SOUTH;
     }
+
+    public static Player getPlayerPassenger(Entity vehicle) {
+        for (Entity passenger : vehicle.getPassengers()) {
+            if (passenger instanceof Player player) {
+                return player;
+            }
+        }
+        return null;
+    }
+
 }
