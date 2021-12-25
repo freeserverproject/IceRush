@@ -1,27 +1,34 @@
 package run.tere.plugin.icerush.games.listeners;
 
 import com.google.gson.Gson;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
 import org.bukkit.craftbukkit.v1_17_R1.entity.CraftArmorStand;
-import org.bukkit.entity.ArmorStand;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.Vehicle;
+import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockDamageEvent;
+import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.entity.EntityDamageByBlockEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.vehicle.VehicleExitEvent;
 import org.bukkit.event.vehicle.VehicleMoveEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.scheduler.BukkitRunnable;
 import run.tere.plugin.icerush.IceRush;
 import run.tere.plugin.icerush.consts.JsonLocation;
 import run.tere.plugin.icerush.events.PlayerSteerVehicleEvent;
+import run.tere.plugin.icerush.games.consts.IceRushKart;
 import run.tere.plugin.icerush.games.enums.GameStatus;
+import run.tere.plugin.icerush.games.itemblock.interfaces.ItemBlock;
+import run.tere.plugin.icerush.utils.ItemBlockUtil;
 import run.tere.plugin.icerush.utils.ObjectUtil;
 
 import java.util.ArrayList;
@@ -29,6 +36,17 @@ import java.util.List;
 import java.util.Set;
 
 public class IceRushMainGameListener implements Listener {
+
+    @EventHandler
+    public void onPlayerJoin(PlayerJoinEvent e) {
+        Player player = e.getPlayer();
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                player.setResourcePack("https://github.com/freeserverproject/IceRush/releases/download/v1.0.1/release.zip");
+            }
+        }.runTaskLater(IceRush.getPlugin(), 5L);
+    }
 
     @EventHandler
     public void onPlayerSteerVehicle(PlayerSteerVehicleEvent e) {
@@ -113,10 +131,44 @@ public class IceRushMainGameListener implements Listener {
     }
 
     @EventHandler
+    public void onEntityDamageByBlock(EntityDamageByBlockEvent e) {
+        if (e.getEntityType().equals(EntityType.BOAT)) e.setCancelled(true);
+    }
+
+    @EventHandler
     public void onPlayerDropItem(PlayerDropItemEvent e) {
         Player player = e.getPlayer();
         ItemStack itemStack = e.getItemDrop().getItemStack();
+        e.setCancelled(true);
+        Entity vehicle = player.getVehicle();
+        if (vehicle == null) return;
+        IceRushKart iceRushKart = IceRush.getPlugin().getGameHandler().getIceRushKartHandler().getIceRushKart(vehicle.getUniqueId());
+        if (iceRushKart == null) return;
+        ItemMeta itemMeta = itemStack.getItemMeta();
+        if (itemMeta.getPersistentDataContainer().has(ItemBlockUtil.getItemBlockItemKey(), PersistentDataType.STRING)) {
+            String key = itemMeta.getPersistentDataContainer().get(ItemBlockUtil.getItemBlockItemKey(), PersistentDataType.STRING);
+            if (key.equalsIgnoreCase("Attacker")) {
+                ItemBlock itemBlock = IceRush.getPlugin().getGameHandler().getItemBlockHandler().getItemBlock("アタッカー");
+                itemBlock.use(vehicle, iceRushKart);
+            } else if (key.equalsIgnoreCase("Dash")) {
+                ItemBlock itemBlock = IceRush.getPlugin().getGameHandler().getItemBlockHandler().getItemBlock("ダッシュ");
+                itemBlock.use(vehicle, iceRushKart);
+            } else if (key.equalsIgnoreCase("PlayerSwapper")) {
+                ItemBlock itemBlock = IceRush.getPlugin().getGameHandler().getItemBlockHandler().getItemBlock("プレイヤースワッパー");
+                itemBlock.use(vehicle, iceRushKart);
+            }
+            itemStack.setAmount(itemStack.getAmount() - 1);
+        }
+    }
 
+    @EventHandler
+    public void onBlockPlace(BlockPlaceEvent e) {
+        if (e.getPlayer().getGameMode() != GameMode.CREATIVE) e.setCancelled(true);
+    }
+
+    @EventHandler
+    public void onBlockBreak(BlockBreakEvent e) {
+        if (e.getPlayer().getGameMode() != GameMode.CREATIVE) e.setCancelled(true);
     }
 
     @EventHandler

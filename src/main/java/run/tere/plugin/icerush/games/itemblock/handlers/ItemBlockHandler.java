@@ -34,4 +34,13 @@ public class ItemBlockHandler {
         return copiedItemBlocks.get(0);
     }
 
+    public ItemBlock getItemBlock(String name) {
+        for (ItemBlock itemBlock : itemBlocks) {
+            if (itemBlock.getName().equalsIgnoreCase(name)) {
+                return itemBlock;
+            }
+        }
+        return null;
+    }
+
 }

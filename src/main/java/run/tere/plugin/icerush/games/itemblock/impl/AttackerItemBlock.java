@@ -39,7 +39,7 @@ public class AttackerItemBlock implements ItemBlock {
     }
 
     @Override
-    public void use(Vehicle vehicle, IceRushKart iceRushKart) {
+    public void use(Entity vehicle, IceRushKart iceRushKart) {
         Location vehicleLocation = vehicle.getLocation().clone();
         Vector direction = vehicleLocation.getDirection().clone().setY(0);
         ArmorStand attackerStand = vehicle.getWorld().spawn(vehicleLocation.clone().add(direction), ArmorStand.class, as -> {

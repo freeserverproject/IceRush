@@ -1,5 +1,6 @@
 package run.tere.plugin.icerush.utils;
 
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -33,6 +34,12 @@ public class ChatUtil {
             if (passenger instanceof Player player) {
                 player.sendTitle(title, subtitle, fadeIn, stay, fadeOut);
             }
+        }
+    }
+
+    public static void sendTitle(String title, String subTitle, int fadeIn, int stay, int fadeOut) {
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            player.sendTitle(title, subTitle, fadeIn, stay, fadeOut);
         }
     }
 

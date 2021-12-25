@@ -19,7 +19,9 @@ import org.bukkit.scheduler.BukkitRunnable;
 import run.tere.plugin.icerush.IceRush;
 import run.tere.plugin.icerush.games.consts.Course;
 import run.tere.plugin.icerush.games.consts.IceRushKart;
+import run.tere.plugin.icerush.games.consts.User;
 import run.tere.plugin.icerush.games.handlers.IceRushKartHandler;
+import run.tere.plugin.icerush.games.handlers.UserHandler;
 import run.tere.plugin.icerush.games.itemblock.interfaces.ItemBlock;
 import run.tere.plugin.icerush.utils.ChatUtil;
 import run.tere.plugin.icerush.utils.ObjectUtil;
@@ -143,7 +145,12 @@ public class IceRushCourseListener implements Listener {
                         for (Entity entity : vehicle.getPassengers()) {
                             entity.eject();
                             if (entity instanceof Player player) {
-                                player.sendTitle("§aゴール!", " ", 0, 10, 0);
+                                player.sendTitle("§aゴール!", " ", 0, 40, 0);
+                                UserHandler userHandler = IceRush.getPlugin().getGameHandler().getUserHandler();
+                                User user = userHandler.getUser(player.getUniqueId());
+                                Bukkit.broadcastMessage(ChatUtil.getPrefix() + "§a" + (userHandler.getGoaledSize() + 1) + "位 §f" + player.getName());
+                                user.addScore(userHandler.getUsers().size() - userHandler.getGoaledSize());
+                                user.setGoal(true);
                                 player.setGameMode(GameMode.SPECTATOR);
                             }
                         }
@@ -151,7 +158,7 @@ public class IceRushCourseListener implements Listener {
                     } else {
                         for (Entity entity : vehicle.getPassengers()) {
                             if (entity instanceof Player player) {
-                                player.sendTitle(" ", "       §e§o" + (nowLap + 1) + " ラップ目", 0, 10, 0);
+                                player.sendTitle(" ", "       §e§o" + (nowLap + 1) + " ラップ目", 0, 40, 0);
                                 player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1F, 1F);
                             }
                         }

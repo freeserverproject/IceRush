@@ -34,7 +34,7 @@ public class DashItemBlock implements ItemBlock {
     }
 
     @Override
-    public void use(Vehicle vehicle, IceRushKart iceRushKart) {
+    public void use(Entity vehicle, IceRushKart iceRushKart) {
         vehicle.getLocation().getDirection().clone().multiply(3);
         for (Entity passenger : vehicle.getPassengers()) {
             if (passenger instanceof Player player) {

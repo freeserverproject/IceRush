@@ -28,8 +28,11 @@ public class IceRushCommand implements CommandExecutor {
             sender.sendMessage("§f======== [§bIceRush§f] ========");
             sender.sendMessage("§a/icerush§f: このヘルプを表示する");
             sender.sendMessage("§a/icerush start§f: ゲームを開始する");
+            sender.sendMessage("§a/icerush result§f: 結果を表示");
+            sender.sendMessage("§a/icerush reset§f: ゲームをリセットする");
             sender.sendMessage("§a/icerush get <dash/jump/itemblock/checkpoint/returncp>§f: 各種アイテムを取得する");
             sender.sendMessage("§a/icerush addkart§f: カートを追加する");
+            sender.sendMessage("§a/icerush course set§f: コースをセットする");
             sender.sendMessage("§a/icerush course add§f: 現在のワールドをコースとして追加する");
             sender.sendMessage("§a/icerush course remove§f: 現在のワールドをコースから削除する");
             sender.sendMessage("§a/icerush course lap [value]§f: 現在のワールドの周回回数を変更する");
@@ -39,8 +42,15 @@ public class IceRushCommand implements CommandExecutor {
         } else {
             switch (args[0]) {
                 case "start":
-
+                    IceRush.getPlugin().getGameHandler().prepareGame();
                     ChatUtil.sendMessage(sender, "§aIceRushを開始しました!");
+                    break;
+                case "result":
+                    IceRush.getPlugin().getGameHandler().showResult();
+                    break;
+                case "reset":
+                    IceRush.getPlugin().getGameHandler().resetGame();
+                    ChatUtil.sendMessage(sender, "§aIceRushをリセットしました!");
                     break;
                 case "get":
                     if (!(sender instanceof Player player)) {
@@ -98,6 +108,14 @@ public class IceRushCommand implements CommandExecutor {
                     }
                     World world = player.getWorld();
                     switch (args[1]) {
+                        case "set":
+                            if (args.length != 2) {
+                                ChatUtil.sendMessage(sender, "§cコマンドが不正です!");
+                                return false;
+                            }
+                            IceRush.getPlugin().getGameHandler().setNowCourseUUID(world.getUID());
+                            ChatUtil.sendMessage(sender, "§aコースを設定しました!");
+                            break;
                         case "add":
                             if (IceRush.getPlugin().getGameHandler().getCourseHandler().getCourse(world.getUID()) != null) {
                                 ChatUtil.sendMessage(sender, "§cそのワールドはすでにコースに追加されています!");

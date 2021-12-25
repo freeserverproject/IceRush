@@ -40,7 +40,7 @@ public class PlayerSwapperItemBlock implements ItemBlock {
     }
 
     @Override
-    public void use(Vehicle vehicle, IceRushKart iceRushKart) {
+    public void use(Entity vehicle, IceRushKart iceRushKart) {
         IceRushKart randomKart = IceRush.getPlugin().getGameHandler().getIceRushKartHandler().getRandomIceRushKart(iceRushKart);
         if (randomKart == null) {
             ChatUtil.sendMessagePassenger(vehicle, "§cスワップする相手がいません!");
