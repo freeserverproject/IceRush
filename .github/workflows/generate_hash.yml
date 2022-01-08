@@ -1,0 +1,36 @@
+name: new release
+
+on:
+
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Declare some variables
+        id: vars
+        shell: bash
+        run: |
+          wget https://github.com/freeserverproject/IceRush/releases/latest/download/release.zip
+      - name: Get latest release
+        id: latest_release
+        uses: kaliber5/action-get-release@v1
+        with:
+          token: ${{ github.token }}
+          latest: true
+      - name: Sum sha256
+        run: |
+          shasum ./release.zip | cut -c 1-40 > hash
+      - name: Upload Realease hash
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.latest_release.outputs.upload_url }}
+          asset_path: ./hash
+          asset_name: hash
+          asset_content_type: text/plain
