@@ -13,12 +13,13 @@ import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockDamageEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
-import org.bukkit.event.entity.EntityDamageByBlockEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
+import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.vehicle.VehicleDamageEvent;
+import org.bukkit.event.vehicle.VehicleDestroyEvent;
 import org.bukkit.event.vehicle.VehicleExitEvent;
 import org.bukkit.event.vehicle.VehicleMoveEvent;
 import org.bukkit.inventory.ItemStack;
@@ -26,12 +27,15 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.util.Vector;
 import run.tere.plugin.icerush.IceRush;
 import run.tere.plugin.icerush.consts.JsonLocation;
 import run.tere.plugin.icerush.events.PlayerSteerVehicleEvent;
 import run.tere.plugin.icerush.games.consts.IceRushKart;
 import run.tere.plugin.icerush.games.enums.GameStatus;
+import run.tere.plugin.icerush.games.handlers.GameHandler;
 import run.tere.plugin.icerush.games.itemblock.interfaces.ItemBlock;
+import run.tere.plugin.icerush.utils.ChatUtil;
 import run.tere.plugin.icerush.utils.ItemBlockUtil;
 import run.tere.plugin.icerush.utils.ObjectUtil;
 
@@ -81,6 +85,10 @@ public class IceRushMainGameListener implements Listener {
     @EventHandler
     public void onVehicleMove(VehicleMoveEvent e) {
         Vehicle vehicle = e.getVehicle();
+        if (IceRush.getPlugin().getGameHandler().getGameStatus().equals(GameStatus.COUNTDOWN)) {
+            vehicle.setVelocity(new Vector(0, 0, 0));
+            return;
+        }
         Location toLocation = e.getTo();
         List<Entity> nearbyEntities = new ArrayList<>(toLocation.getWorld().getNearbyEntities(toLocation, 3, 3, 3, as -> as instanceof ArmorStand));
         for (Entity nearbyEntity : nearbyEntities) {
@@ -156,11 +164,6 @@ public class IceRushMainGameListener implements Listener {
     }
 
     @EventHandler
-    public void onEntityDamageByBlock(EntityDamageByBlockEvent e) {
-        if (e.getEntityType().equals(EntityType.BOAT)) e.setCancelled(true);
-    }
-
-    @EventHandler
     public void onPlayerDropItem(PlayerDropItemEvent e) {
         Player player = e.getPlayer();
         ItemStack itemStack = e.getItemDrop().getItemStack();
@@ -184,6 +187,28 @@ public class IceRushMainGameListener implements Listener {
             }
             itemStack.setAmount(itemStack.getAmount() - 1);
         }
+    }
+
+    @EventHandler
+    public void onVehicleDestroy(VehicleDestroyEvent e) {
+        e.setCancelled(true);
+    }
+
+    @EventHandler
+    public void onEntityDamageByBlock(EntityDamageEvent e) {
+        if (e.getEntityType().equals(EntityType.BOAT)) {
+            e.setCancelled(true);
+        }
+    }
+
+    @EventHandler
+    public void onVehicleDamage(VehicleDamageEvent e) {
+        e.setCancelled(true);
+    }
+
+    @EventHandler
+    public void onPlayerInteractAtEntity(PlayerInteractAtEntityEvent e) {
+        if (!IceRush.getPlugin().getGameHandler().getGameStatus().equals(GameStatus.PREPARING)) e.setCancelled(true);
     }
 
     @EventHandler
