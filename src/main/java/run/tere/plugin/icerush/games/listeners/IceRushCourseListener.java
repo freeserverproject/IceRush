@@ -1,7 +1,9 @@
 package run.tere.plugin.icerush.games.listeners;
 
+import com.xxmicloxx.NoteBlockAPI.event.SongLoopEvent;
 import com.xxmicloxx.NoteBlockAPI.model.Song;
 import com.xxmicloxx.NoteBlockAPI.songplayer.RadioSongPlayer;
+import com.xxmicloxx.NoteBlockAPI.songplayer.SongPlayer;
 import com.xxmicloxx.NoteBlockAPI.utils.NBSDecoder;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -96,22 +98,7 @@ public class IceRushCourseListener implements Listener {
         IceRushKart iceRushKart = iceRushKartHandler.getIceRushKart(vehicle.getUniqueId());
         if (iceRushKart == null) return;
 
-        ArmorStand nearestArmorStand = null;
-        double nearestArmorStandDistance = Double.MAX_VALUE;
-        for (Entity entity : toLocation.getWorld().getNearbyEntities(toLocation, 30, 30, 30, entity -> {
-            if (entity instanceof ArmorStand armorStand) {
-                return armorStand.getPersistentDataContainer().has(ObjectUtil.getCheckpointKey(), PersistentDataType.INTEGER);
-            } else {
-                return false;
-            }
-        })) {
-            if (!(entity instanceof ArmorStand armorStand)) continue;
-            double distance = armorStand.getLocation().distance(toLocation);
-            if (distance < nearestArmorStandDistance) {
-                nearestArmorStand = armorStand;
-                nearestArmorStandDistance = distance;
-            }
-        }
+        ArmorStand nearestArmorStand = CourseUtil.getNearestCheckpoint(toLocation);
         if (nearestArmorStand == null) return;
         int next = nearestArmorStand.getPersistentDataContainer().get(ObjectUtil.getCheckpointKey(), PersistentDataType.INTEGER);
         List<Integer> throughCheckpoints = iceRushKart.getThroughCheckpoints();
@@ -128,7 +115,7 @@ public class IceRushCourseListener implements Listener {
 
         for (Entity entity : vehicle.getPassengers()) {
             if (entity instanceof Player player) {
-                player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(nowCheckpoint + ", " + next + ", " + checkPointSize + ", " + iceRushKart.getNowLap()));
+                player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent("\uF82C\uF82D" + CourseUtil.getRankDisplay(CourseUtil.getPlayerRank(player))));
             }
         }
 
@@ -159,8 +146,9 @@ public class IceRushCourseListener implements Listener {
                                 player.sendTitle("§aゴール!", " ", 0, 40, 0);
                                 UserHandler userHandler = IceRush.getPlugin().getGameHandler().getUserHandler();
                                 User user = userHandler.getUser(player.getUniqueId());
-                                Bukkit.broadcastMessage(ChatUtil.getPrefix() + "§a" + (userHandler.getGoaledSize() + 1) + "位 §f" + player.getName());
-                                user.addScore(userHandler.getUsers().size() - userHandler.getGoaledSize());
+                                int goal = userHandler.getGoaledSize() + 1;
+                                Bukkit.broadcastMessage(ChatUtil.getPrefix() + "§a" + (goal) + "位 §f" + player.getName());
+                                user.addScore(CourseUtil.getGoalScore(goal));
                                 user.setGoal(true);
                                 player.setGameMode(GameMode.SPECTATOR);
                             }
