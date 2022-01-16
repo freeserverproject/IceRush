@@ -139,10 +139,11 @@ public class GameHandler {
         if (course == null) return;
         String bgmFile = course.getBGM();
         if (bgmFile != null) {
-            radioSongPlayer = new RadioSongPlayer(NBSDecoder.parse(new File(IceRush.getPlugin().getDataFolder() + File.separator + "sounds", bgmFile + ".nbs")));
+            radioSongPlayer = new RadioSongPlayer(WrappedNBSDecoder.parse(new File(IceRush.getPlugin().getDataFolder() + File.separator + "sounds", bgmFile + ".nbs")));
             for (Player player : Bukkit.getOnlinePlayers()) {
                 radioSongPlayer.addPlayer(player);
             }
+            radioSongPlayer.setChannelMode(new MonoStereoMode());
             radioSongPlayer.setRepeatMode(RepeatMode.ONE);
             radioSongPlayer.setEnable10Octave(true);
             radioSongPlayer.setPlaying(true);
