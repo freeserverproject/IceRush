@@ -1,6 +1,10 @@
 package run.tere.plugin.icerush.games.listeners;
 
 import com.google.gson.Gson;
+import com.squareup.okhttp.*;
+import org.apache.commons.codec.DecoderException;
+import org.apache.commons.codec.binary.Hex;
+import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
@@ -31,6 +35,7 @@ import run.tere.plugin.icerush.games.itemblock.interfaces.ItemBlock;
 import run.tere.plugin.icerush.utils.ItemBlockUtil;
 import run.tere.plugin.icerush.utils.ObjectUtil;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -40,12 +45,32 @@ public class IceRushMainGameListener implements Listener {
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent e) {
         Player player = e.getPlayer();
+        String url = "https://github.com/freeserverproject/IceRush/releases/latest/download/";
         new BukkitRunnable() {
             @Override
             public void run() {
-                player.setResourcePack("https://github.com/freeserverproject/IceRush/releases/download/v1.0.1/release.zip");
+                try {
+                    player.setResourcePack(url + "release.zip", Hex.decodeHex(getHash(url + "hash")));
+                } catch (DecoderException ex) {
+                    ex.printStackTrace();
+                }
             }
         }.runTaskLater(IceRush.getPlugin(), 5L);
+    }
+
+    public static String getHash(String hashURL) {
+        OkHttpClient client = new OkHttpClient();
+        Request request = new Request.Builder().url(hashURL).build();
+        Call call = client.newCall(request);
+        String hash;
+        try {
+            Response response = call.execute();
+            ResponseBody body = response.body();
+            hash = body.string();
+        } catch (IOException e) {
+            hash = "null";
+        }
+        return hash.replaceAll("\n", "");
     }
 
     @EventHandler
