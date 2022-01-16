@@ -24,13 +24,23 @@ import run.tere.plugin.icerush.games.handlers.IceRushKartHandler;
 import run.tere.plugin.icerush.games.handlers.UserHandler;
 import run.tere.plugin.icerush.games.itemblock.interfaces.ItemBlock;
 import run.tere.plugin.icerush.utils.ChatUtil;
+import run.tere.plugin.icerush.utils.CourseUtil;
 import run.tere.plugin.icerush.utils.ObjectUtil;
 import run.tere.plugin.icerush.utils.PlayerUtil;
+import run.tere.plugin.icerush.wrapped.nbapi.WrappedSong;
 
 import java.io.File;
 import java.util.List;
 
 public class IceRushCourseListener implements Listener {
+
+    @EventHandler
+    public void onSongLoopEvent(SongLoopEvent e) {
+        SongPlayer songPlayer = e.getSongPlayer();
+        if (songPlayer.getSong() instanceof WrappedSong song) {
+            songPlayer.setTick(song.getLoopStartTick());
+        }
+    }
 
     @EventHandler
     public void onItemBlockManager(VehicleMoveEvent e) {
