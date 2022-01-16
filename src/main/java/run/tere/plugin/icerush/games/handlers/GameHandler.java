@@ -115,7 +115,13 @@ public class GameHandler {
             public void run() {
                 if (count[0] >= 3) {
                     startGame();
-                    ChatUtil.sendTitle("§bIceRush", "§f- §aStart §f-", 0, 40, 20);
+                    for (ArmorStand stopper : stopperList) {
+                        for (Entity passenger : stopper.getPassengers()) {
+                            passenger.eject();
+                        }
+                        stopper.remove();
+                    }
+                    ChatUtil.sendTitle("\uE001", "§f- §aStart §f-", 0, 40, 20);
                     SoundUtil.playSound(Sound.BLOCK_NOTE_BLOCK_BIT, 1F, 1F);
                     cancel();
                     return;
