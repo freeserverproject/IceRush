@@ -1,4 +1,5 @@
 plugins {
+    id 'com.github.johnrengelman.shadow' version '7.1.2'
     id 'java'
 }
 
@@ -20,8 +21,11 @@ repositories {
 
 dependencies {
     compileOnly 'org.spigotmc:spigot-api:1.17.1-R0.1-SNAPSHOT'
-    implementation(fileTree(dir: 'libs', include: ['NoteBlockAPI-2.0-SNAPSHOT.jar', 'spigot-1.17.1.jar']))
-    compileOnly group: "com.comphenix.protocol", name: "ProtocolLib", version: "4.7.0";
+    compileOnly group: "com.comphenix.protocol", name: "ProtocolLib", version: "4.7.0"
+    compileOnly(fileTree(dir: 'libs', include: ['NoteBlockAPI-2.0-SNAPSHOT.jar', 'spigot-1.17.1.jar']))
+
+    implementation group: 'commons-codec', name: 'commons-codec', version: '1.15'
+    implementation group: 'com.squareup.okhttp', name: 'okhttp', version: '2.7.5'
 }
 
 def targetJavaVersion = 16
