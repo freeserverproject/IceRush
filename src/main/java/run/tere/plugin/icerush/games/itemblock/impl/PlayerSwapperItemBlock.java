@@ -3,15 +3,13 @@ package run.tere.plugin.icerush.games.itemblock.impl;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.Sound;
 import org.bukkit.craftbukkit.v1_17_R1.entity.CraftArmorStand;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.Vehicle;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
+import org.bukkit.scheduler.BukkitRunnable;
 import run.tere.plugin.icerush.IceRush;
 import run.tere.plugin.icerush.games.consts.IceRushKart;
 import run.tere.plugin.icerush.games.itemblock.interfaces.ItemBlock;
@@ -71,6 +69,13 @@ public class PlayerSwapperItemBlock implements ItemBlock {
         toCraftArmorStand.getHandle().setPosition(fromLocation.getX(), fromLocation.getY(), fromLocation.getZ());
         ChatUtil.sendMessagePassenger(vehicle, "§aスワップした!");
         ChatUtil.sendMessagePassenger(randomKartEntity, "§aスワップされた!");
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                fromArmorStand.remove();
+                toArmorStand.remove();
+            }
+        }.runTask(IceRush.getPlugin());
     }
 
 }
