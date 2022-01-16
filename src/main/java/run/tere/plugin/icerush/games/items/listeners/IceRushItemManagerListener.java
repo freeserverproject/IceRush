@@ -140,14 +140,14 @@ IceRushItemManagerListener implements Listener {
                                             @Override
                                             public void run() {
                                                 teleporter.remove();
-                                                player.sendTitle("§f\uE001 §a移動完了 §f\uE001", " ", 0, 20, 0);
+                                                player.sendTitle("§f\uE003 §a移動完了 §f\uE003", " ", 0, 20, 0);
                                                 player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_BIT, 1F, 2F);
                                             }
                                         }.runTaskLater(IceRush.getPlugin(), 10L);
                                         cancel();
                                         return;
                                     }
-                                    player.sendTitle("§f\uE000 §c移動中 §f\uE000", " ", 0, 20, 0);
+                                    player.sendTitle("§f\uE002 §c移動中 §f\uE002", " ", 0, 20, 0);
                                     player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_BIT, 1F, 0.793701F);
                                     craftArmorStand.getHandle().setPosition(startLocation.getX() + dX * count[0], startLocation.getY() + dY * count[0], startLocation.getZ() + dZ * count[0]);
                                     count[0]++;

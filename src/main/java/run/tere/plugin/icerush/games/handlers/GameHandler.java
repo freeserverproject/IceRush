@@ -110,7 +110,7 @@ public class GameHandler {
                     return;
                 }
                 SoundUtil.playSound(Sound.BLOCK_NOTE_BLOCK_BIT, 1F, 0.5F);
-                ChatUtil.sendTitle("§bIceRush", "§f- " + (3 - count[0]) + " -", 0, 40, 20);
+                ChatUtil.sendTitle("\uE001", "§f- " + (3 - count[0]) + " -", 0, 40, 20);
                 count[0]++;
             }
         }.runTaskTimer(IceRush.getPlugin(), 0L, 20L);
