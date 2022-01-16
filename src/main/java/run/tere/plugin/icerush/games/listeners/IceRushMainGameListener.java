@@ -60,6 +60,13 @@ public class IceRushMainGameListener implements Listener {
                 }
             }
         }.runTaskLater(IceRush.getPlugin(), 5L);
+
+        GameHandler gameHandler = IceRush.getPlugin().getGameHandler();
+        if (!gameHandler.getGameStatus().equals(GameStatus.PREPARING)) {
+            ChatUtil.sendMessage(player, "§cゲーム中の為観戦モードに変更しました");
+            player.setGameMode(GameMode.SPECTATOR);
+            player.teleport(Bukkit.getWorld(gameHandler.getNowCourseUUID()).getSpawnLocation());
+        }
     }
 
     public static String getHash(String hashURL) {
