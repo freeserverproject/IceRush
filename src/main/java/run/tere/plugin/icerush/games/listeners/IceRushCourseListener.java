@@ -72,6 +72,7 @@ public class IceRushCourseListener implements Listener {
         if (player == null) return;
         ItemStack itemBlockSlotItem = player.getInventory().getItem(3);
         if (itemBlockSlotItem != null) return;
+        player.getInventory().setItem(3, ObjectUtil.getRollingWait());
         Song song = NBSDecoder.parse(new File(IceRush.getPlugin().getDataFolder() + File.separator + "sounds", "rolling.nbs"));
         RadioSongPlayer rsp = new RadioSongPlayer(song);
         rsp.addPlayer(player);
