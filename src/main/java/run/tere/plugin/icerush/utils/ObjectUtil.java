@@ -160,6 +160,14 @@ public class ObjectUtil {
         return itemStack;
     }
 
+    public static ItemStack getRollingWait() {
+        ItemStack itemStack = new ItemStack(Material.BLACK_DYE, 1);
+        ItemMeta itemMeta = itemStack.getItemMeta();
+        itemMeta.setDisplayName(" ");
+        itemStack.setItemMeta(itemMeta);
+        return itemStack;
+    }
+
     public static ItemStack getReturnCheckpoint() {
         ItemStack itemStack = new ItemStack(Material.BLAZE_ROD, 1);
         ItemMeta itemMeta = itemStack.getItemMeta();
