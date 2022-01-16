@@ -1,11 +1,12 @@
 package run.tere.plugin.icerush.games.handlers;
 
 import com.xxmicloxx.NoteBlockAPI.model.RepeatMode;
-import com.xxmicloxx.NoteBlockAPI.model.Song;
+import com.xxmicloxx.NoteBlockAPI.model.playmode.MonoStereoMode;
 import com.xxmicloxx.NoteBlockAPI.songplayer.RadioSongPlayer;
-import com.xxmicloxx.NoteBlockAPI.utils.NBSDecoder;
 import org.bukkit.*;
+import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Boat;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import run.tere.plugin.icerush.IceRush;
@@ -18,8 +19,11 @@ import run.tere.plugin.icerush.utils.ChatUtil;
 import run.tere.plugin.icerush.utils.JsonUtil;
 import run.tere.plugin.icerush.utils.ObjectUtil;
 import run.tere.plugin.icerush.utils.SoundUtil;
+import run.tere.plugin.icerush.wrapped.nbapi.WrappedNBSDecoder;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public class GameHandler {
@@ -81,12 +85,19 @@ public class GameHandler {
         gameStatus = GameStatus.COUNTDOWN;
 
         Location spawnLocation = world.getSpawnLocation().clone();
+        List<ArmorStand> stopperList = new ArrayList<>();
         for (Player player : Bukkit.getOnlinePlayers()) {
-            Boat kart = world.spawn(spawnLocation, Boat.class, boat -> {
-                boat.addPassenger(player);
-                boat.setInvulnerable(true);
+            ArmorStand stopper = world.spawn(spawnLocation, ArmorStand.class, armorStand -> {
+                armorStand.setVisible(false);
+                armorStand.setMarker(true);
+                Boat kart = world.spawn(spawnLocation, Boat.class, boat -> {
+                    boat.addPassenger(player);
+                    boat.setInvulnerable(true);
+                });
+                armorStand.addPassenger(kart);
+                this.iceRushKartHandler.getIceRushKarts().add(new IceRushKart(kart.getUniqueId()));
             });
-            this.iceRushKartHandler.getIceRushKarts().add(new IceRushKart(kart.getUniqueId()));
+            stopperList.add(stopper);
             player.getInventory().clear();
             player.setGameMode(GameMode.ADVENTURE);
             player.getInventory().setItem(5, ObjectUtil.getReturnCheckpoint().clone());
