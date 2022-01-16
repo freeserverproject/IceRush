@@ -4,10 +4,10 @@ import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
-import org.bukkit.entity.Vehicle;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
+import org.bukkit.util.Vector;
 import run.tere.plugin.icerush.games.consts.IceRushKart;
 import run.tere.plugin.icerush.games.itemblock.interfaces.ItemBlock;
 import run.tere.plugin.icerush.utils.ItemBlockUtil;
@@ -35,7 +35,8 @@ public class DashItemBlock implements ItemBlock {
 
     @Override
     public void use(Entity vehicle, IceRushKart iceRushKart) {
-        vehicle.getLocation().getDirection().clone().multiply(3);
+        Vector vector = vehicle.getLocation().getDirection().clone().multiply(3);
+        vehicle.setVelocity(vector);
         for (Entity passenger : vehicle.getPassengers()) {
             if (passenger instanceof Player player) {
                 player.playSound(player.getLocation(), Sound.ENTITY_ENDER_DRAGON_FLAP, 1F, 1F);
